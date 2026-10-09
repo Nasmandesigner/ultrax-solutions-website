@@ -1,0 +1,30 @@
+# Dependencies and generated build output
+node_modules/
+.next/
+.vercel/
+.turbo/
+out/
+build/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Local environment and private credentials
+.env*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.secret
+*.credentials
+credentials.json
+secrets.json
+
+# Private source document; keep the reference PDF out of the public repository
+/Reference/ULTRAX Profile.pdf
+
+# Logs and local OS metadata
+*.log
+.DS_Store
+Thumbs.db

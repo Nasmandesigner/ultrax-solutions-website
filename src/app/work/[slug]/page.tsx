@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ContactCallout } from "@/components/contact-callout";
-import { projects } from "@/data/projects";
+import { ProjectGallery } from "@/components/project-gallery";
+import { portfolioProjects, projects } from "@/data/projects";
 
 type CaseStudyPageProps = {
   params: Promise<{ slug: string }>;
@@ -29,13 +30,13 @@ export async function generateMetadata({ params }: CaseStudyPageProps): Promise<
 
 export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
   const { slug } = await params;
-  const index = projects.findIndex((item) => item.slug === slug);
-  const project = projects[index];
+  const project = projects.find((item) => item.slug === slug);
 
   if (!project) notFound();
 
-  const previousProject = projects[index - 1];
-  const nextProject = projects[index + 1];
+  const index = portfolioProjects.findIndex((item) => item.slug === slug);
+  const previousProject = portfolioProjects[index - 1];
+  const nextProject = portfolioProjects[index + 1];
 
   return (
     <article className="case-study">
@@ -54,16 +55,31 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         <p className="case-study__lede">{project.caseStudy.overview}</p>
         <div className="case-study__index">
           <span>Documented engagement</span>
-          <span>{String(index + 1).padStart(2, "0")} <i>/</i> {String(projects.length).padStart(2, "0")}</span>
+          <span>{String(index + 1).padStart(2, "0")} <i>/</i> {String(portfolioProjects.length).padStart(2, "0")}</span>
         </div>
+        {project.reference ? (
+          <a
+            aria-label={`${project.reference.label} (external reference, opens in a new tab)`}
+            className="case-study__reference"
+            href={project.reference.href}
+            rel="noreferrer noopener"
+            target="_blank"
+          >
+            {project.reference.label}
+            <span aria-hidden="true">↗</span>
+            <small>External reference</small>
+          </a>
+        ) : null}
       </header>
+
+      <ProjectGallery images={project.images} />
 
       <div className="case-study__content container-shell">
         <section aria-labelledby="case-scope-title" className="case-study__scope">
           <div className="case-study__section-heading">
-            <p className="eyebrow"><span className="eyebrow__mark" />Company-profile scope</p>
+            <p className="eyebrow"><span className="eyebrow__mark" />Documented scope</p>
             <h2 id="case-scope-title">What the engagement covered</h2>
-            <p>Items below are drawn from the project description in the UltraX company profile.</p>
+            <p>Scope items below are based on the project description in the UltraX company profile.</p>
           </div>
           <ol className="case-study__scope-list">
             {project.caseStudy.scope.map((item, itemIndex) => (
